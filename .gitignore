@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.local
+supabase/.temp/
+supabase/.branches/
+playwright-report/
+test-results/
+masters-template.xlsx
+.claude/settings.local.json
+.claude/.headroom_wrap_marker.json
