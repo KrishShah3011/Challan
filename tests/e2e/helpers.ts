@@ -12,7 +12,7 @@ export async function login(page: Page): Promise<void> {
 /** Types into a searchable Mantine Select (found by its label) and clicks the matching option. */
 export async function pickOption(scope: Page | Locator, label: string, search: string, option: string | RegExp): Promise<void> {
   const page = 'goto' in scope ? scope : scope.page();
-  const input = scope.getByLabel(label, { exact: true });
+  const input = scope.getByRole('textbox', { name: label, exact: true }); // not getByLabel: Mantine's listbox is also aria-labelledby the label
   await input.click();
   await input.fill(search);
   await page.getByRole('option', { name: option }).first().click();
