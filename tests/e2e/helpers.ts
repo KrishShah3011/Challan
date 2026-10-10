@@ -2,6 +2,7 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { TEST_USER } from '../helpers/localEnv';
 
 export async function login(page: Page): Promise<void> {
+  page.on('dialog', (d) => void d.accept());
   await page.goto('/');
   await page.getByLabel('Email').fill(TEST_USER.email);
   await page.getByLabel('Password', { exact: true }).fill(TEST_USER.password);
@@ -16,4 +17,19 @@ export async function pickOption(scope: Page | Locator, label: string, search: s
   await input.click();
   await input.fill(search);
   await page.getByRole('option', { name: option }).first().click();
+}
+
+export async function createInvoice(
+  page: Page,
+  opts: { companySearch: string; company: RegExp; itemSearch: string; item: RegExp; qty: string },
+): Promise<string> {
+  await page.goto('/invoices/new');
+  await pickOption(page, 'Company', opts.companySearch, opts.company);
+  const card = page.getByTestId('item-card').nth(0);
+  await pickOption(card, 'Item', opts.itemSearch, opts.item);
+  await card.getByLabel('Quantity').fill(opts.qty);
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+  const heading = page.getByRole('heading', { name: /^Invoice .+ saved$/ });
+  await expect(heading).toBeVisible();
+  return ((await heading.textContent()) ?? '').replace(/^Invoice /, '').replace(/ saved$/, '');
 }
