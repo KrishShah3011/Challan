@@ -1,0 +1,19 @@
+# Pings Supabase once a day so the free project is never paused for inactivity.
+# Needs repository secrets SUPABASE_URL and SUPABASE_ANON_KEY. Keep the repository private:
+# GitHub disables scheduled workflows in public repositories after 60 days without activity.
+name: keep-alive
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call keep_alive()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          curl --fail --silent --show-error -X POST "$SUPABASE_URL/rest/v1/rpc/keep_alive" \
+            -H "apikey: $SUPABASE_ANON_KEY" -H "Content-Type: application/json" -d '{}'
