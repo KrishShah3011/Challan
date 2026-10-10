@@ -124,6 +124,14 @@ export async function invoiceHistory(id: string): Promise<AuditRow[]> {
   return check(res) as AuditRow[];
 }
 
+export async function invoiceExistsOrDeleted(id: string): Promise<boolean> {
+  const [inv, audit] = await Promise.all([
+    supabase.from('invoices').select('id').eq('id', id).maybeSingle(),
+    supabase.from('audit_log').select('id').eq('table_name', 'invoices').eq('row_id', id).limit(1).maybeSingle(),
+  ]);
+  return Boolean(inv.data || audit.data);
+}
+
 // Drafts ------------------------------------------------------------------------
 
 export async function upsertDraft(d: { id: string; label: string; data: unknown }): Promise<void> {

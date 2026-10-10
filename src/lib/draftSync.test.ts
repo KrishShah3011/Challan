@@ -99,4 +99,21 @@ describe('pushLocalDrafts', () => {
     expect(storage.m.has(`${LOCAL_PREFIX}b`)).toBe(true);
     expect(storage.m.has('unrelated')).toBe(true);
   });
+
+  it('skips drafts that already exist as invoices or were deleted and clears them from storage', async () => {
+    const storage = memoryStorage();
+    storage.setItem(`${LOCAL_PREFIX}exist`, JSON.stringify({ id: 'exist', label: 'E', data: {} }));
+    storage.setItem(`${LOCAL_PREFIX}deleted`, JSON.stringify({ id: 'deleted', label: 'D', data: {} }));
+    storage.setItem(`${LOCAL_PREFIX}valid`, JSON.stringify({ id: 'valid', label: 'V', data: {} }));
+    const save = vi.fn().mockResolvedValue(undefined);
+    const shouldSkip = vi.fn(async (id: string) => id === 'exist' || id === 'deleted');
+
+    const sent = await pushLocalDrafts(storage, save, shouldSkip);
+    expect(sent).toBe(1);
+    expect(save).toHaveBeenCalledTimes(1);
+    expect(save).toHaveBeenCalledWith(expect.objectContaining({ id: 'valid' }));
+    expect(storage.m.has(`${LOCAL_PREFIX}exist`)).toBe(false);
+    expect(storage.m.has(`${LOCAL_PREFIX}deleted`)).toBe(false);
+    expect(storage.m.has(`${LOCAL_PREFIX}valid`)).toBe(false);
+  });
 });

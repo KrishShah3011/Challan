@@ -12,8 +12,10 @@ describe('parseAmount', () => {
     ['2.333', 'qty', '2.333'],
     ['10.25', 'price', '10.25'],
     ['0', 'price', '0'],
+    ['0.', 'price', '0'],
     ['100', 'rate', '100'],
     ['0.25', 'rate', '0.25'],
+    ['0.', 'rate', '0'],
   ] as const)('accepts %j as %s → %s', (raw, kind, expected) => {
     expect(parseAmount(raw, kind)).toBe(expected);
   });
@@ -24,6 +26,12 @@ describe('parseAmount', () => {
     ['-1', 'price'],
     ['abc', 'qty'],
     ['', 'amount'],
+    ['.', 'price'],
+    ['  .  ', 'price'],
+    ['.', 'rate'],
+    ['  .  ', 'rate'],
+    ['.', 'qty'],
+    ['.', 'amount'],
     ['100.01', 'rate'],
     ['123456789012', 'qty'],
   ] as const)('rejects %j as %s', (raw, kind) => {

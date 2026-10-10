@@ -12,9 +12,10 @@ const LIMITS = {
 } as const;
 export type NumberKind = keyof typeof LIMITS;
 
-/** Accept what people type: '1,000' -> '1000', '.5' -> '0.5', '5.' -> '5', ' 2 ' -> '2'. */
+/** Accept what people type: '1,000' -> '1000', '.5' -> '0.5', '5.' -> '5', ' 2 ' -> '2'. A lone '.' has no digits -> ''. */
 export function cleanNumber(raw: string): string {
   let s = raw.replace(/[\s,]/g, '');
+  if (s === '.') return '';
   if (s.startsWith('.')) s = `0${s}`;
   if (s.endsWith('.')) s = s.slice(0, -1);
   return s;

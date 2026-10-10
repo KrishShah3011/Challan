@@ -98,7 +98,11 @@ export function createAutosaver(opts: {
 }
 
 /** On app start: send drafts that were kept on this device while offline. Returns how many were sent. */
-export async function pushLocalDrafts(storage: Store, save: (rec: DraftRecord) => Promise<void>): Promise<number> {
+export async function pushLocalDrafts(
+  storage: Store,
+  save: (rec: DraftRecord) => Promise<void>,
+  shouldSkip?: (id: string) => Promise<boolean>,
+): Promise<number> {
   const keys: string[] = [];
   for (let i = 0; i < storage.length; i++) {
     const k = storage.key(i);
@@ -108,8 +112,25 @@ export async function pushLocalDrafts(storage: Store, save: (rec: DraftRecord) =
   for (const k of keys) {
     const raw = storage.getItem(k);
     if (!raw) continue;
+    let rec: DraftRecord;
     try {
-      await save(JSON.parse(raw) as DraftRecord);
+      rec = JSON.parse(raw) as DraftRecord;
+    } catch {
+      storage.removeItem(k);
+      continue;
+    }
+    if (shouldSkip) {
+      try {
+        if (await shouldSkip(rec.id)) {
+          storage.removeItem(k);
+          continue;
+        }
+      } catch {
+        // network issue: continue to save attempt
+      }
+    }
+    try {
+      await save(rec);
       storage.removeItem(k);
       sent++;
     } catch {

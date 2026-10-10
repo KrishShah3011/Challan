@@ -42,6 +42,7 @@ reset role;
 
 -- Catalog check: every table, function and sequence in public needs an explicit decision here.
 -- A new object that is not listed (or carries an unexpected grant) fails this section.
+-- Note: Decision lists below are hard-coded; any new table, function, or sequence in public must be added here with its approved grants.
 create temp table want_table (tbl text, priv text);
 insert into want_table values
   ('seller','select'),('seller','insert'),('seller','update'),

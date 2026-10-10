@@ -64,4 +64,10 @@ describe('buildWorkbook', () => {
     expect(wb.Sheets.Items['!ref']).toBe('A1:L1');
     expect(wb.Sheets.Charges['!ref']).toBe('A1:G1');
   });
+
+  it('protects against formula injection: string starting with = stays type "s"', () => {
+    const malicious: InvoiceRow = { ...base, buyer_name: '=1+1' };
+    const wb = roundTrip({ invoices: [malicious], lines: [], charges: [] });
+    expect(wb.Sheets.Invoices.C2).toMatchObject({ t: 's', v: '=1+1' });
+  });
 });

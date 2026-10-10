@@ -120,8 +120,14 @@ select is((select count(*)::int from public.audit_log where table_name = 'items'
   3, 'insert, edit and archive of a master are logged');
 select is((select old_data->>'gst_rate' from public.audit_log where table_name = 'items' and new_data->>'name' = 'Audit Item'
   and action = 'UPDATE' order by id limit 1), '5.00', 'log keeps old values');
+create temp table pg_temp.seller_audit_before as
+  select count(*)::int as c from public.audit_log where table_name = 'seller' and action = 'UPDATE';
 update public.seller set phone = '000';
-select is((select count(*)::int from public.audit_log where table_name = 'seller' and action = 'UPDATE'), 1, 'seller changes logged');
+select is(
+  (select count(*)::int from public.audit_log where table_name = 'seller' and action = 'UPDATE') - (select c from pg_temp.seller_audit_before),
+  1,
+  'seller changes logged'
+);
 
 select is(public.keep_alive(), 1, 'keep_alive');
 

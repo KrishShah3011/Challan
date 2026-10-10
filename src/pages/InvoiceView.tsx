@@ -4,6 +4,7 @@ import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { TotalsPanel } from '../components/TotalsPanel';
+import { LOCAL_PREFIX } from '../lib/draftSync';
 import { deleteInvoice, getInvoice, invoiceHistory } from '../lib/db';
 import { describeError, loadErrorMessage } from '../lib/errors';
 import { fmtDate, fmtDateTime } from '../lib/format';
@@ -84,6 +85,11 @@ export function InvoiceView() {
     setBusy(true);
     try {
       const no = await deleteInvoice(inv.id, typed);
+      try {
+        localStorage.removeItem(LOCAL_PREFIX + inv.id);
+      } catch {
+        // storage disabled or restricted
+      }
       notifications.show({ color: 'green', message: `Invoice ${no} deleted.` });
       navigate('/invoices');
     } catch (e) {

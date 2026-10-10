@@ -130,6 +130,15 @@ describe('validateForm', () => {
     const noType = { ...f, charges: [{ key: 'k', chargeTypeId: null, name: '', amount: '10', gstRate: '18' }] };
     expect(validateForm(noType)['charges.0.type']).toBe('Please choose a charge type.');
   });
+  it('validates price and gst_rate on lone dot, whitespace, and 0.', () => {
+    const f = filled();
+    expect(validateForm({ ...f, lines: [{ ...f.lines[0], price: '.' }] })['lines.0.price']).toMatch(/enter price/);
+    expect(validateForm({ ...f, lines: [{ ...f.lines[0], price: '  .  ' }] })['lines.0.price']).toMatch(/enter price/);
+    expect(validateForm({ ...f, lines: [{ ...f.lines[0], gstRate: '.' }] })['lines.0.gstRate']).toMatch(/enter GST rate/);
+    expect(validateForm({ ...f, lines: [{ ...f.lines[0], gstRate: '  .  ' }] })['lines.0.gstRate']).toMatch(/enter GST rate/);
+    expect(validateForm({ ...f, lines: [{ ...f.lines[0], price: '0.' }] })['lines.0.price']).toBeUndefined();
+    expect(validateForm({ ...f, lines: [{ ...f.lines[0], gstRate: '0.' }] })['lines.0.gstRate']).toBeUndefined();
+  });
 });
 
 describe('buildSavePayload', () => {
