@@ -63,7 +63,7 @@ insert into want_fn values
   ('keep_alive','authenticated'),('keep_alive','anon');
 -- Functions that exist but nobody may call directly.
 create temp table internal_fn (fn text);
-insert into internal_fn values ('invoice_json'),('set_updated_at'),('audit_row');
+insert into internal_fn values ('invoice_json'),('set_updated_at'),('audit_row'),('go_live_reset');
 
 select is((select coalesce(string_agg(c.relname, ', '), '') from pg_class c
            where c.relnamespace = 'public'::regnamespace and c.relkind in ('r','p','v','m','f')
