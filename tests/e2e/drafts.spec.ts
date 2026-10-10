@@ -57,9 +57,13 @@ test('discarding a draft removes it', async ({ page }) => {
   await expect(page.getByTestId('draft-status')).toHaveText(/^Draft saved/, { timeout: 10_000 });
   await page.getByRole('link', { name: 'Drafts' }).first().click();
   await page.getByRole('button', { name: 'Leave' }).click();
+  await expect(page.getByTestId('drafts-loaded')).toBeVisible();
   const rows = page.getByTestId('draft-row').filter({ hasText: 'Mehta Engineering Works' });
+  await expect(rows.first()).toBeVisible();
   const count = await rows.count();
   await rows.first().getByRole('button', { name: 'Discard' }).click();
-  await page.getByRole('button', { name: 'Discard', exact: true }).last().click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole('button', { name: 'Discard' }).click();
   await expect(rows).toHaveCount(count - 1);
 });
