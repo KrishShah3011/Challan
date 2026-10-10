@@ -41,3 +41,41 @@ test('search copes with commas and percent signs', async ({ page }) => {
   await expect(page.getByText('No invoice matches your search.')).toBeVisible();
   await expect(page.getByText('Something went wrong')).toHaveCount(0);
 });
+
+test('warns and reloads when invoice was edited concurrently (EDIT_CONFLICT)', async ({ page, context }) => {
+  await login(page);
+  const no = await createInvoice(page, {
+    companySearch: 'Mehta',
+    company: /Mehta Engineering Works/,
+    itemSearch: 'Cement',
+    item: /Cement Bag 50 kg/,
+    qty: '3',
+  });
+
+  await page.goto('/invoices');
+  await page.getByLabel('Search by number or company').fill(no);
+  const row = page.getByTestId('invoice-row').filter({ hasText: no });
+  await row.click();
+  await page.getByRole('link', { name: 'Edit' }).click();
+  await expect(page.getByTestId('item-card').nth(0).getByLabel('Quantity')).toHaveValue('3');
+
+  const page2 = await context.newPage();
+  page2.on('dialog', (d) => void d.accept());
+  await page2.goto(page.url());
+  await expect(page2.getByTestId('item-card').nth(0).getByLabel('Quantity')).toHaveValue('3');
+  await page2.getByTestId('item-card').nth(0).getByLabel('Quantity').fill('5');
+  await page2.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(page2.getByRole('heading', { name: `Invoice ${no} saved` })).toBeVisible();
+  await page2.close();
+
+  await page.getByTestId('item-card').nth(0).getByLabel('Quantity').fill('7');
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByRole('heading', { name: 'Changed on another device' })).toBeVisible();
+  await expect(dialog.getByText(/This invoice was changed on another device/)).toBeVisible();
+
+  await dialog.getByRole('button', { name: 'Reload' }).click();
+  await expect(page.getByTestId('item-card').nth(0).getByLabel('Quantity')).toHaveValue('5');
+});
+
