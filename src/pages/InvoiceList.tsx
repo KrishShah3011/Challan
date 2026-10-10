@@ -3,6 +3,7 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { IconSearch } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import { ExportButton } from '../components/ExportButton';
 import { listInvoices, PAGE_SIZE } from '../lib/db';
 import { loadErrorMessage } from '../lib/errors';
 import { fmtDate } from '../lib/format';
@@ -45,6 +46,7 @@ export function InvoiceList() {
     <Stack>
       <Group justify="space-between" align="center">
         <Title order={1}>Invoices</Title>
+        <ExportButton />
       </Group>
       <TextInput
         label="Search by number or company"

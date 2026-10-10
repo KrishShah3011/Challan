@@ -1,6 +1,7 @@
 import { Paper, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { IconFilePlus, IconFileText, IconList, IconNotes, IconSettings } from '@tabler/icons-react';
 import { Link } from 'react-router';
+import { ExportButton } from '../components/ExportButton';
 import { TILE_STYLE } from '../theme';
 
 const TILES = [
@@ -24,6 +25,7 @@ export function Home() {
             </Text>
           </Paper>
         ))}
+        <ExportButton tile />
       </SimpleGrid>
     </Stack>
   );
