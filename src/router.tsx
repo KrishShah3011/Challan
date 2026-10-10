@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import { AppLayout } from './components/AppLayout';
+import { Drafts } from './pages/Drafts';
 import { Home } from './pages/Home';
 import { InvoiceFormPage } from './pages/InvoiceForm';
 import { InvoiceList } from './pages/InvoiceList';
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
       { path: '/invoices', element: <InvoiceList /> },
       { path: '/invoices/:id', element: <InvoiceView /> },
       { path: '/invoices/:id/edit', element: <InvoiceFormPage /> },
+      { path: '/drafts', element: <Drafts /> },
       { path: '/lists', element: <Masters /> },
       { path: '/settings', element: <Settings /> },
       { path: '*', element: <Navigate to="/" replace /> },

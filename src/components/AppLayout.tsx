@@ -1,7 +1,10 @@
 import { Alert, AppShell, Container, Group } from '@mantine/core';
 import { useMediaQuery, useNetwork } from '@mantine/hooks';
 import { IconFilePlus, IconFileText, IconHome, IconList, IconNotes, IconSettings, IconWifiOff } from '@tabler/icons-react';
+import { useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router';
+import { upsertDraft } from '../lib/db';
+import { pushLocalDrafts } from '../lib/draftSync';
 
 const WIDE = '(min-width: 900px)';
 const LINKS = [
@@ -16,6 +19,11 @@ const LINKS = [
 const PHONE_LINKS = LINKS.slice(0, 4);
 
 export function AppLayout() {
+  // Drafts kept on this device while offline are sent as soon as the app opens again.
+  useEffect(() => {
+    void pushLocalDrafts(window.localStorage, upsertDraft);
+  }, []);
+
   const wide = useMediaQuery(WIDE, window.matchMedia(WIDE).matches, { getInitialValueInEffect: false });
   const { online } = useNetwork();
 
