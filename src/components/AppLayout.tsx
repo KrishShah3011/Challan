@@ -2,7 +2,7 @@ import { Alert, AppShell, Container, Group } from '@mantine/core';
 import { useMediaQuery, useNetwork } from '@mantine/hooks';
 import { IconFilePlus, IconFileText, IconHome, IconList, IconNotes, IconSettings, IconWifiOff } from '@tabler/icons-react';
 import { useEffect } from 'react';
-import { NavLink, Outlet } from 'react-router';
+import { NavLink, Outlet, useLocation } from 'react-router';
 import { invoiceExistsOrDeleted, upsertDraft } from '../lib/db';
 import { pushLocalDrafts } from '../lib/draftSync';
 
@@ -26,6 +26,7 @@ export function AppLayout() {
 
   const wide = useMediaQuery(WIDE, window.matchMedia(WIDE).matches, { getInitialValueInEffect: false });
   const { online } = useNetwork();
+  const { pathname } = useLocation();
 
   const nav = (
     <Group
@@ -36,29 +37,14 @@ export function AppLayout() {
       gap={wide ? 'md' : 0}
       justify={wide ? 'flex-start' : 'space-around'}
       wrap="nowrap"
+      className="cy-nav"
     >
       {(wide ? LINKS : PHONE_LINKS).map(({ to, label, icon: Icon }) => (
         <NavLink
           key={to}
           to={to}
           end
-          style={({ isActive }) => ({
-            display: 'flex',
-            flexDirection: wide ? 'row' : 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: wide ? 8 : 2,
-            minHeight: 56,
-            minWidth: 64,
-            padding: '4px 8px',
-            textDecoration: 'none',
-            textAlign: 'center',
-            lineHeight: 1.15,
-            fontSize: '1.125rem',
-            fontWeight: isActive ? 700 : 500,
-            color: isActive ? 'var(--mantine-color-blue-8)' : 'var(--mantine-color-gray-9)',
-            borderBottom: `3px solid ${isActive ? 'var(--mantine-color-blue-8)' : 'transparent'}`,
-          })}
+          className="cy-nav-link"
         >
           <Icon size={28} aria-hidden />
           {label}
@@ -69,7 +55,17 @@ export function AppLayout() {
 
   return (
     <AppShell header={wide ? { height: 72 } : undefined} footer={wide ? undefined : { height: 84 }} padding="md">
-      {wide ? <AppShell.Header>{nav}</AppShell.Header> : <AppShell.Footer>{nav}</AppShell.Footer>}
+      <div className="cy-backdrop" aria-hidden="true" />
+      {wide ? (
+        <AppShell.Header>
+          <span className="cy-brand" aria-hidden="true">
+            CHALLAN
+          </span>
+          {nav}
+        </AppShell.Header>
+      ) : (
+        <AppShell.Footer>{nav}</AppShell.Footer>
+      )}
       <AppShell.Main>
         <Container size="lg" px={0}>
           {!online && (
@@ -77,7 +73,9 @@ export function AppLayout() {
               No internet — your work is safe on this screen
             </Alert>
           )}
-          <Outlet />
+          <div key={pathname} className="cy-enter">
+            <Outlet />
+          </div>
         </Container>
       </AppShell.Main>
     </AppShell>

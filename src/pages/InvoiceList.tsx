@@ -63,18 +63,18 @@ export function InvoiceList() {
           component={Link}
           to={`/invoices/${r.id}`}
           data-testid="invoice-row"
-          style={{ textDecoration: 'none', color: 'inherit' }}
+          className="cy-row"
         >
           <Group justify="space-between" wrap="nowrap">
-            <Text fw={800} size="lg">
+            <Text fw={800} size="lg" className="cy-num cy-invoice-no">
               {r.invoice_no}
             </Text>
-            <Text fw={700} size="lg">
+            <Text fw={700} size="lg" className="cy-num">
               {fmtMoney(r.grand_total)}
             </Text>
           </Group>
           <Text>{r.buyer_name}</Text>
-          <Text c="gray.7">{fmtDate(r.invoice_date)}</Text>
+          <Text c="dimmed">{fmtDate(r.invoice_date)}</Text>
         </Card>
       ))}
       {loading && (

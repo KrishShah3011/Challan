@@ -149,13 +149,13 @@ export function InvoiceView() {
                   <Table.Td>{i + 1}</Table.Td>
                   <Table.Td>
                     <Text fw={600}>{l.item_name}</Text>
-                    {l.description && <Text c="gray.7">{l.description}</Text>}
+                    {l.description && <Text c="dimmed">{l.description}</Text>}
                   </Table.Td>
                   <Table.Td>{l.hsn}</Table.Td>
-                  <Table.Td>{`${plain(l.qty)} ${l.unit}`}</Table.Td>
-                  <Table.Td>{fmtMoney(l.price)}</Table.Td>
-                  <Table.Td>{fmtMoney(totals.lines[i].amount)}</Table.Td>
-                  <Table.Td>{fmtRate(l.gst_rate)}</Table.Td>
+                  <Table.Td className="cy-num">{`${plain(l.qty)} ${l.unit}`}</Table.Td>
+                  <Table.Td className="cy-num">{fmtMoney(l.price)}</Table.Td>
+                  <Table.Td className="cy-num">{fmtMoney(totals.lines[i].amount)}</Table.Td>
+                  <Table.Td className="cy-num">{fmtRate(l.gst_rate)}</Table.Td>
                 </Table.Tr>
               ))}
             </Table.Tbody>
@@ -173,8 +173,8 @@ export function InvoiceView() {
               {inv.invoice_charges.map((c) => (
                 <Table.Tr key={c.id}>
                   <Table.Td>{c.name}</Table.Td>
-                  <Table.Td>{fmtMoney(c.amount)}</Table.Td>
-                  <Table.Td>{fmtRate(c.gst_rate)}</Table.Td>
+                  <Table.Td className="cy-num">{fmtMoney(c.amount)}</Table.Td>
+                  <Table.Td className="cy-num">{fmtRate(c.gst_rate)}</Table.Td>
                 </Table.Tr>
               ))}
             </Table.Tbody>

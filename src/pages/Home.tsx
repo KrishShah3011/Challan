@@ -1,8 +1,8 @@
-import { Paper, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { IconFilePlus, IconFileText, IconList, IconNotes, IconSettings } from '@tabler/icons-react';
+import type { CSSProperties } from 'react';
 import { Link } from 'react-router';
 import { ExportButton } from '../components/ExportButton';
-import { TILE_STYLE } from '../theme';
 
 const TILES = [
   { to: '/invoices/new', label: 'New Invoice', icon: IconFilePlus },
@@ -17,13 +17,13 @@ export function Home() {
     <Stack>
       <Title order={1}>Home</Title>
       <SimpleGrid cols={{ base: 2, sm: 3 }} spacing="md">
-        {TILES.map(({ to, label, icon: Icon }) => (
-          <Paper key={to} component={Link} to={to} withBorder radius="md" p="lg" style={TILE_STYLE}>
+        {TILES.map(({ to, label, icon: Icon }, i) => (
+          <Link key={to} to={to} className="cy-tile" style={{ '--i': i } as CSSProperties}>
             <Icon size={44} aria-hidden />
             <Text size="lg" fw={700} ta="center">
               {label}
             </Text>
-          </Paper>
+          </Link>
         ))}
         <ExportButton tile />
       </SimpleGrid>

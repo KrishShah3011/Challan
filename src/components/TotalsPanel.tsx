@@ -15,7 +15,7 @@ function Line({ label, value, strong = false }: { label: string; value: string; 
   return (
     <Group justify="space-between" wrap="nowrap" gap="xs">
       <Text fw={strong ? 700 : 400}>{label}</Text>
-      <Text fw={strong ? 700 : 500} style={{ whiteSpace: 'nowrap' }}>
+      <Text fw={strong ? 700 : 500} className="cy-num" style={{ whiteSpace: 'nowrap' }}>
         {value}
       </Text>
     </Group>
@@ -50,8 +50,8 @@ export function TotalsPanel({ totals, sameState, mode, action }: Props) {
         <Text size="xl" fw={700}>
           Grand Total
         </Text>
-        <Text size="xl" fw={800} data-testid="grand-total">
-          {fmtMoney(totals.grandTotal)}
+        <Text size="xl" fw={800} className="cy-grand" data-testid="grand-total">
+          <span key={fmtMoney(totals.grandTotal)}>{fmtMoney(totals.grandTotal)}</span>
         </Text>
       </Group>
       <Text fs="italic" data-testid="amount-words">

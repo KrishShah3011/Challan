@@ -241,7 +241,7 @@ export function InvoiceEditor({ initial, masters: initialMasters }: { initial: I
   if (saved) {
     return (
       <Stack align="center" py="xl" gap="lg">
-        <IconCircleCheck size={72} color="var(--mantine-color-green-7)" aria-hidden />
+        <IconCircleCheck className="cy-success" size={72} aria-hidden />
         <Title order={1} ta="center">
           Invoice {saved.invoiceNo} saved
         </Title>
@@ -410,7 +410,7 @@ export function InvoiceEditor({ initial, masters: initialMasters }: { initial: I
         <Stack>
           <Title order={2}>4. Items</Title>
           {errors.lines && (
-            <Text c="red.8" data-invalid="true" tabIndex={-1}>
+            <Text c="red" data-invalid="true" tabIndex={-1}>
               {errors.lines}
             </Text>
           )}
@@ -436,7 +436,7 @@ export function InvoiceEditor({ initial, masters: initialMasters }: { initial: I
       <Paper withBorder p="md">
         <Stack>
           <Title order={2}>5. Charges</Title>
-          {form.charges.length === 0 && <Text c="gray.7">No extra charges.</Text>}
+          {form.charges.length === 0 && <Text c="dimmed">No extra charges.</Text>}
           {form.charges.map((c, i) => (
             <ChargeRow
               key={c.key}
@@ -468,7 +468,7 @@ export function InvoiceEditor({ initial, masters: initialMasters }: { initial: I
     <Stack>
       <Title order={1}>{form.mode === 'edit' ? `Edit invoice ${form.originalInvoiceNo}` : 'New invoice'}</Title>
       {statusText && (
-        <Text c={status.kind === 'offline' ? 'orange.9' : 'gray.7'} data-testid="draft-status">
+        <Text c={status.kind === 'offline' ? 'orange' : 'dimmed'} data-testid="draft-status">
           {statusText}
         </Text>
       )}

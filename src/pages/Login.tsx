@@ -1,4 +1,4 @@
-import { Alert, Button, Container, PasswordInput, Stack, TextInput, Title } from '@mantine/core';
+import { Alert, Button, Container, Paper, PasswordInput, Stack, TextInput, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useState, type FormEvent } from 'react';
@@ -30,26 +30,45 @@ export function Login({ embedded = false }: { embedded?: boolean }) {
     else notifications.show({ color: 'green', message: 'We sent a password reset link to your email.' });
   }
 
+  const form = (
+    <form onSubmit={(e) => void submit(e)}>
+      <Stack>
+        <TextInput label="Email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.currentTarget.value)} required />
+        <PasswordInput label="Password" withAsterisk={false} autoComplete="current-password" value={password} onChange={(e) => setPassword(e.currentTarget.value)} required />
+        {error && (
+          <Alert color="red" icon={<IconAlertCircle />}>
+            {error}
+          </Alert>
+        )}
+        <Button type="submit" disabled={busy}>
+          {busy ? 'Logging in…' : 'Log in'}
+        </Button>
+        <Button variant="subtle" onClick={() => void forgot()}>
+          Forgot password
+        </Button>
+      </Stack>
+    </form>
+  );
+
+  if (embedded) {
+    return (
+      <Container size={460} py="xl">
+        {form}
+      </Container>
+    );
+  }
   return (
-    <Container size={460} py="xl">
-      <form onSubmit={(e) => void submit(e)}>
-        <Stack>
-          {!embedded && <Title order={1}>Invoices</Title>}
-          <TextInput label="Email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.currentTarget.value)} required />
-          <PasswordInput label="Password" withAsterisk={false} autoComplete="current-password" value={password} onChange={(e) => setPassword(e.currentTarget.value)} required />
-          {error && (
-            <Alert color="red" icon={<IconAlertCircle />}>
-              {error}
-            </Alert>
-          )}
-          <Button type="submit" disabled={busy}>
-            {busy ? 'Logging in…' : 'Log in'}
-          </Button>
-          <Button variant="subtle" onClick={() => void forgot()}>
-            Forgot password
-          </Button>
-        </Stack>
-      </form>
-    </Container>
+    <div className="cy-login">
+      <div className="cy-backdrop" aria-hidden="true" />
+      <div className="cy-login-hero">
+        <Title order={1} className="cy-login-title">
+          Invoices
+        </Title>
+        <p className="cy-login-tag">GST invoices, drafts and Excel export.</p>
+      </div>
+      <Paper withBorder p="xl" className="cy-login-form">
+        {form}
+      </Paper>
+    </div>
   );
 }

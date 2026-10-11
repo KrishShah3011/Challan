@@ -1,13 +1,12 @@
-import { Button, Paper, Text } from '@mantine/core';
+import { Button, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconDownload } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { fetchAll } from '../lib/db';
 import { describeError } from '../lib/errors';
 import { buildWorkbook } from '../lib/exportXlsx';
 import { todayLocal } from '../lib/fy';
 import type { ExportChargeRow, ExportLineRow, InvoiceRow } from '../lib/types';
-import { TILE_STYLE } from '../theme';
 
 async function exportAllInvoices(): Promise<number> {
   const [X, invoices, lines, charges] = await Promise.all([
@@ -50,21 +49,12 @@ export function ExportButton({ tile = false }: { tile?: boolean }) {
   const label = busy ? 'Preparing file…' : 'Download Excel';
   if (tile) {
     return (
-      <Paper
-        component="button"
-        type="button"
-        withBorder
-        radius="md"
-        p="lg"
-        onClick={() => void run()}
-        disabled={busy}
-        style={{ ...TILE_STYLE, width: '100%', background: 'var(--mantine-color-white)', cursor: 'pointer', font: 'inherit' }}
-      >
+      <button type="button" className="cy-tile" style={{ '--i': 5 } as CSSProperties} onClick={() => void run()} disabled={busy}>
         <IconDownload size={44} aria-hidden />
         <Text size="lg" fw={700} ta="center">
           {label}
         </Text>
-      </Paper>
+      </button>
     );
   }
   return (

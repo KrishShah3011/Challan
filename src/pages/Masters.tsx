@@ -143,7 +143,7 @@ function MasterList({ table }: { table: MasterTable }) {
       {visible.map((row) => {
         const d = describeRow(table, row);
         return (
-          <Card key={row.id} withBorder padding="md" data-testid="master-row">
+          <Card key={row.id} withBorder padding="md" className="cy-row" data-testid="master-row">
             <Text fw={700} size="lg">
               {d.title}
             </Text>

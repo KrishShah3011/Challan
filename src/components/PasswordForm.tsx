@@ -27,7 +27,7 @@ export function PasswordForm({ onDone }: { onDone?: () => void }) {
     <Stack>
       <PasswordInput label="New password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.currentTarget.value)} />
       <PasswordInput label="Type it again" autoComplete="new-password" value={again} onChange={(e) => setAgain(e.currentTarget.value)} />
-      {error && <Text c="red.8">{error}</Text>}
+      {error && <Text c="red">{error}</Text>}
       <Button onClick={() => void change()} disabled={busy}>
         {busy ? 'Changing…' : 'Change password'}
       </Button>

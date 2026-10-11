@@ -69,11 +69,11 @@ export function Drafts() {
         <Stack data-testid="drafts-loaded">
           {rows.length === 0 && <Text>No drafts. Unfinished invoices appear here automatically.</Text>}
           {rows.map((d) => (
-            <Card key={d.id} withBorder padding="md" data-testid="draft-row">
+            <Card key={d.id} withBorder padding="md" className="cy-row" data-testid="draft-row">
               <Text fw={700} size="lg">
                 {d.label}
               </Text>
-              <Text c="gray.7">Last saved {fmtDateTime(d.updated_at)}</Text>
+              <Text c="dimmed">Last saved {fmtDateTime(d.updated_at)}</Text>
               <Group mt="sm">
                 <Button onClick={() => resume(d)}>Resume</Button>
                 <Button variant="subtle" color="red" onClick={() => discard(d)}>

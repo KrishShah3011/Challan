@@ -68,12 +68,12 @@ export function ItemCard({ index, line, items, row, errors, onChange, onRemove, 
           />
           <TextInput label="GST rate (%)" inputMode="decimal" value={line.gstRate} onChange={(e) => set({ gstRate: e.currentTarget.value })} error={err('gstRate')} />
         </SimpleGrid>
-        <Group justify="space-between" bg="gray.0" p="sm" style={{ borderRadius: 8 }}>
+        <Group justify="space-between" p="sm" className="cy-item-total">
           <Text>
-            Amount <b>{fmtMoney(row.amount)}</b>
+            Amount <b className="cy-num">{fmtMoney(row.amount)}</b>
           </Text>
           <Text>
-            GST <b>{fmtMoney(row.gstAmount)}</b>
+            GST <b className="cy-num">{fmtMoney(row.gstAmount)}</b>
           </Text>
         </Group>
       </Stack>

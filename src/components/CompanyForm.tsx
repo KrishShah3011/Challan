@@ -80,7 +80,7 @@ export function CompanyForm({ initial, onSaved, onCancel }: Props) {
         onBlur={() => void checkSharedGstin()}
         error={errors.gstin}
       />
-      {warning && <Text c="orange.9">{warning}</Text>}
+      {warning && <Text c="orange">{warning}</Text>}
       <StateSelect
         label="State"
         value={state || null}
